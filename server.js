@@ -21,29 +21,47 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/api/timestamp", function (req, res) {
+  var newDate = new Date();
+  var unixTimeStamp = newDate.valueOf();
+  res.json({
+    utc: newDate.toUTCString(),
+    unix: unixTimeStamp
+  })
+});
 
 // your first API endpoint...
 app.get("/api/timestamp/:timestamp", function (req, res) {
   var time = req.params.timestamp;
   try {
     var handler = new TimeHandler();
-    if (handler.isTimestamp(time)) {
-      var properTime = parseInt(time);
-      var newDate = handler.parseDate(time);
+    if (!handler.isValidDate(time)) {
+
       res.json({
-        utc: newDate.toString(),
-        unix: properTime
-      })
+        error: "Invalid Date"
+      });
     }
     else {
-      var newDate = handler.parseDate(time);
-      var unixTimeStamp = newDate.getTime() / 1000;
-      res.json({
-        utc: newDate.toString(),
-        unix: unixTimeStamp
-      })
+      if (handler.isTimestamp(time)) {
+        var properTime = parseInt(time);
+        var newDate = handler.parseDate(time);
+        res.json({
+          unix: properTime,
+          utc: newDate.toUTCString(),
+
+        })
+      }
+      else {
+        var newDate = handler.parseDate(time);
+        var unixTimeStamp = newDate.valueOf();
+        res.json({
+          utc: newDate.toUTCString(),
+          unix: unixTimeStamp
+        })
+      }
     }
   }
+
   catch (ex) {
     res.json({
       error: "Invalid Date"
@@ -58,3 +76,6 @@ app.get("/api/timestamp/:timestamp", function (req, res) {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+//To get started on writing tests
+module.exports = app;

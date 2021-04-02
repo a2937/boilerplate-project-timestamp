@@ -22,5 +22,11 @@
 		"express",
 		"freecodecamp"
 	],
-	"license": "MIT"
+	"license": "MIT",
+	"devDependencies": {
+		"chai": "^4.3.4",
+		"chai-http": "^4.3.0",
+		"mocha": "^8.3.2",
+		"zombie": "^6.1.4"
+	}
 }

@@ -1,17 +1,48 @@
 class TimeHandler {
 
   /**
-   *
-   * @param {String} time
+   * Checks if the given value is a
+   * valid time stamp
+   * @param {String} time the value to check to see if it is a timestamp expressed as a string
    * @returns {boolean} if the provided input is a Unix timestamp
    */
   isTimestamp(time) {
-    if (time.indexOf("-") != -1 || time.indexOf("/") != -1) {
+    //Does it consist of only numbers
+    if (parseFloat(time) == NaN) {
       return false;
     }
     else {
-      return true;
+      var date = new Date(time);
+      //if the date is a valid number
+      //that can't be read by the Date object
+      //and it is a string then it must be
+      //a time stamp
+      if (isNaN(date.getTime())
+        && typeof time == "string") {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
+  }
+
+  /**
+   * Determines if the string can be parsed
+   * by the JavaScript Date object.
+   * @param {String} time value to test
+   * @returns {boolean} true if the given input appears to be a date or timestamp
+   */
+  isValidDate(time) {
+    var date;
+    if (this.isTimestamp(time)) {
+      var timeAsNumber = parseFloat(time);
+      date = new Date(timeAsNumber);
+    }
+    else {
+      date = new Date(time);
+    }
+    return isNaN(date.getTime()) == false;
   }
 
   /**
